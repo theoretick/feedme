@@ -1,6 +1,7 @@
 package feedparser
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/mmcdole/gofeed"
@@ -12,7 +13,11 @@ func Latest(maxItems int) []*gofeed.Item {
 
 	items := []*gofeed.Item{}
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(feedUrl)
+	feed, error := fp.ParseURL(feedUrl)
+	if error != nil {
+		fmt.Printf("Error parsing %v\n%v\n", feedUrl, error.Error())
+		os.Exit(1)
+	}
 
 	for n, i := range feed.Items {
 		if n > maxItems {
