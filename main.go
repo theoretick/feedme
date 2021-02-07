@@ -71,6 +71,9 @@ func main() {
 			relItems = append(relItems, item)
 		}
 
+		itemAbout := cocoa.NSMenuItem_New()
+		itemAbout.SetTitle("Feedme - Menubar RSS Reader | © @theoretick")
+
 		itemQuit := cocoa.NSMenuItem_New()
 		itemQuit.SetTitle("Quit")
 		itemQuit.SetAction(objc.Sel("terminate:"))
@@ -79,6 +82,7 @@ func main() {
 		for _, i := range relItems {
 			menu.AddItem(i)
 		}
+		menu.AddItem(itemAbout)
 		menu.AddItem(itemQuit)
 		obj.SetMenu(menu)
 
