@@ -3,6 +3,7 @@ package main
 import (
 	"runtime"
 	"strconv"
+	"time"
 
 	"gitlab.com/theoretick/feedme/feedparser"
 	"gitlab.com/theoretick/feedme/launcher"
@@ -12,8 +13,9 @@ import (
 )
 
 const (
-	maxItems    = 100
-	titleLength = 30
+	maxItems       = 100
+	refreshSeconds = 60
+	titleLength    = 30
 )
 
 func main() {
@@ -25,12 +27,14 @@ func main() {
 
 		obj := cocoa.NSStatusBar_System().StatusItemWithLength(cocoa.NSVariableStatusItemLength)
 		obj.Retain()
-		obj.Button().SetTitle("▶️ " + latestTitle)
+		obj.Button().SetTitle("✴️ " + latestTitle)
 
 		relClicked := make(chan int)
 		go func() {
 			for {
 				select {
+				case <-time.After(refreshSeconds * time.Second):
+					releases = feedparser.Latest(maxItems)
 				case pos := <-relClicked:
 					// Default title to first entry to
 					// initialize releases, but don't launch out of index
