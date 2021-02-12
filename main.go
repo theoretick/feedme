@@ -23,7 +23,11 @@ func main() {
 
 	app := cocoa.NSApp_WithDidLaunch(func(n objc.Object) {
 		releases := feedparser.Latest(maxItems)
-		latestTitle := releases[0].Title[:titleLength]
+		trimLength := titleLength
+		if len(releases[0].Title) < trimLength {
+			trimLength = len(releases[0].Title)
+		}
+		latestTitle := releases[0].Title[:trimLength]
 
 		obj := cocoa.NSStatusBar_System().StatusItemWithLength(cocoa.NSVariableStatusItemLength)
 		obj.Retain()
